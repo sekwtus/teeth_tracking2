@@ -1,0 +1,488 @@
+@extends('layouts.template')
+
+
+@section('title', 'ติดตามงาน')
+
+@section('stylesheet')
+<style>
+table{
+    font-size: 13px;
+},
+th{
+    text-align:center;
+
+}
+</style>
+
+@stop
+
+@section('content')
+<div class="content-wrapper">
+    <div class="row" id="stepApp">
+        <div class="col-12 grid-margin">
+            <div class="card">
+                <div class="card-header header-sm">
+                    <div class="row">
+                        <div class="col-10">
+                            <ul class="nav nav-tabs tab-basic" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#product" role="tab" aria-controls="whoweare" aria-selected="true">
+                                        <h6>งานที่อยู่ในแลป</h6>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#complete" role="tab" aria-controls="ourgoal" aria-selected="false">
+                                        <h6>งานที่จัดส่งแล้ว</h6>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="tab-content tab-content-basic">
+                        <div class="tab-pane fade show active" id="product" role="tabpanel" aria-labelledby="home-tab">
+                            <table id="table"  class=" table-striped table-bordered display compact nowrap " width="100%">
+                                <thead>
+                                    <tr>
+                                        <th style="padding:0%;">ลำดับ</th>
+                                        <th style="padding:5px;">วันส่งงาน</th>
+                                        <th style="padding:5px;">งาน</th>
+                                        <th style="padding:5px;">แลป</th>
+                                        <th style="padding:5px;">พื้นที่</th>
+                                        <th style="padding:5px;">เขต</th>
+                                        <th>บาร์โค้ด</th>
+                                        <th>ทันตแพทย์</th>
+                                        <th>คลีนิค</th>
+                                        <th>คนไข้</th>
+                                        <th>วันที่รับงาน</th>
+                                        <th>วันที่ส่งงาน</th>
+                                        <th style="padding:5px;">รอบการผลิต</th>
+                                        <th>สินค้า</th>
+                                        <th style="padding:5px;">ลักษณะงาน</th>
+                                        <th>สถานะงาน</th>
+                                        @can('IsAdmin')
+                                        <th>action</th>
+                                        @endcan
+                                    </tr>
+                                </thead>
+                                {{-- <//?php $time = Carbon\Carbon::createFromFormat('d/m/Y', $data->DeliverDate)->dayOfWeek;
+                                ?> --}}
+                                {{-- <tbody>
+                                     <//?php$count = 1; ?>
+                                    @foreach ($order_sale as $data)
+                                    <tr>
+                                        <td align="center">{{ $count++ }}</td>
+                                        @if(!empty($data->DeliverDate))
+
+                                            <//?php $time = Carbon\Carbon::createFromFormat('d/m/Y', $data->DeliverDate)->dayOfWeek;
+                                            ?>
+                                            @if($time == 1)
+                                                <td bgcolor="#FFFF00" align="center"><font color="black">จันทร์</font></td>
+                                            @elseif($time == 2)
+                                                <td bgcolor="#FF0066" align="center"><font color="black">อังคาร</font></td>
+                                            @elseif($time == 3)
+                                                <td bgcolor="#32CD32"align="center"><font color="black">พุธ</font></td>
+                                            @elseif($time == 4)
+                                                <td bgcolor="#FF8C00" align="center"><font color="black">พฤหัสบดี</font></td>
+                                            @elseif($time == 5)
+                                                <td bgcolor="1E90FF" align="center"><font color="black">ศุกร์</font></td>
+                                            @elseif($time == 6)
+                                                <td bgcolor="#990099" align="center"><font color="black">เสาร์</font></td>
+                                            @else
+                                                <td bgcolor="#FF0000" align="center"><font color="black">อาทิตย์</font></td>
+                                            @endif
+                                        @else
+                                            <td align="center">ไม่ระบุวันส่งงาน</td>
+                                        @endif
+                                        @if($data->DeliverType == 'ด่วน' || $data->DeliverType == 'ด่วนรับปาก')
+                                            <td bgcolor="#FF0000" align="center"><font color="white">{{ $data->DeliverType }}</font></td>
+                                        @else
+                                            <td align="center">{{ $data->DeliverType }}</td>
+                                        @endif
+                                        <td align="center">{{ $data->company_name }}</td>
+                                        <td align="center">{{ $data->Zonename }}</td>
+                                        <td align="center">{{ $data->name_area }}</td>
+                                        <td><a href="{{ url('/summary_report/'.$data->ID) }}">{{ $data->Barcode }}</a></td>
+                                        <td>{{ $data->doctor }}</td>
+                                        <td>{{ $data->customer}}</td>
+                                        <td>{{ $data->PatientName }}</td>
+                                        <td>{{ $data->StartDate }}</td>
+                                        <td>@php
+                                                $date = str_replace('/', '-', $data->DeliverDate );
+                                                $newDate = date("Y-m-d", strtotime($date));
+                                                $date = str_replace('-', '', $newDate );
+                                            @endphp
+                                            <span style="display:none;">{{$date}}</span>
+                                            {{ $data->DeliverDate }}</td>
+                                        @if(!empty($data->production_cycle))
+                                            <td align="center">{{$data->production_cycle }}</td>
+                                        @else
+                                            <td align="center">-</td>
+                                        @endif
+                                        @if(!empty($data->type_of_product))
+                                            <td >{{$data->type_of_product }}</td>
+                                        @else
+                                            <td align="center">-</td>
+                                        @endif
+                                        <td align="center">
+                                            @if ($data->RefBarcode != null)
+                                                <font color="red">งานแก้</font>
+                                            @elseif ($data->ContiBarcode != null)
+                                                <font color="blue">งานต่อเนื่อง</font>
+                                            @else
+                                                งานใหม่
+                                            @endif
+
+                                        </td>
+                                        <td>
+                                            @if ($data->department == null || $data->department == '')
+                                                <label class="badge badge-outline-danger badge-pill">รอ Screen</label>
+                                            @else
+                                                @if($data->job_current_department == 1000)
+                                                    <label class="badge badge-outline-primary badge-pill">รอ Screen  - แก้ไขซี่ฟันใหม่</label>
+                                                @else
+                                                    @if(($data->sub_department_name != '' || $data->sub_department_name != NULL) && ($data->DepartmentID == $data->job_current_department))
+                                                    <label class="badge badge-outline-primary badge-pill">{{ $data->department }}  - {{ $data->sub_department_name }}</label>
+                                                    @else
+                                                    <label class="badge badge-outline-primary badge-pill">{{ $data->department }}</label>
+                                                    @endif
+                                                @endif
+                                            @endif
+                                        </td>
+                                        @can('IsAdmin')
+                                        <td>
+                                            <button type="button" style="margin-bottom: 10px;" class="btn btn-danger" data-toggle="modal" data-target="#delete_barcode{{ $data->ID }}">ลบบาร์โค้ด</button>
+                                        </td> @endcan
+                                    </tr>
+                                    <div class="modal fade" id="delete_barcode{{ $data->ID }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-lg" role="document" style="width:420px;">
+                                            <div class="modal-content">
+                                                <div class="card-header align-items-center text-center"  style=" padding: 0px; background-color:red;">
+                                                    <label class="font-weight-bold ">
+                                                        ลบบาร์โค้ด
+                                                    </label>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+
+
+                                                {{ Form::open(['method' => 'post' , 'url' => '/work_follower/delete_barcode/'.$data->ID]) }}
+                                                    <div class="col-sm-12" style="padding-bottom: 10px;">
+                                                        <div class="control-group">
+                                                            <div class="inc2">
+                                                                <label class="col-form-label col-sm-12"  for="Barcode">
+                                                                    <p class="card-description" style="font-size:15px;"> ยืนยันการลบบาร์โค้ด :<span style="color:red;"> {{ $data->Barcode }} </span></p>
+                                                                </label>
+                                                                <button class="btn btn-outline-danger" id="barcode" name="barcode" value="{{ $data->ID }}" style="padding-right: 10px;padding-left: 10px; float: right;">ยืนยัน</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                {{ Form::close()}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @endforeach
+                                </tbody> --}}
+                            </table>
+                        </div>
+
+
+{{--
+                    <div class="tab-pane fade show" id="complete" role="tabpanel" aria-labelledby="home-tab">
+
+                            <table id="table2"  class=" table-striped table-bordered display compact nowrap" width="100%">
+
+                                <thead>
+                                    <tr>
+                                        <th style="padding:0%;">ลำดับ</th>
+                                        <th style="padding:5px;">วันส่งงาน</th>
+                                        <th style="padding:5px;">งาน</th>
+                                        <th style="padding:5px;">แลป</th>
+                                        <th style="padding:5px;">พื้นที่</th>
+                                        <th style="padding:5px;">เขต</th>
+                                        <th>บาร์โค้ด</th>
+                                        <th>ทันตแพทย์</th>
+                                        <th>คลีนิค</th>
+                                        <th>คนไข้</th>
+                                        <th>วันที่รับงาน</th>
+                                        <th>วันที่ส่งงาน</th>
+                                        <th style="padding:5px;">รอบการผลิต</th>
+                                        <th>สินค้า</th>
+                                        <th style="padding:5px;">ลักษณะงาน</th>
+                                        <th>สถานะงาน</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                <//?php $count = 1; ?>
+                                @foreach ($order_sale_complete as $data)
+                                    <tr>
+                                        <td align="center">{{ $count++ }}</td>
+                                        @if(!empty($data->DeliverDate))
+                                            <//?php
+                                                $time = Carbon\Carbon::createFromFormat('d/m/Y', $data->DeliverDate)->dayOfWeek;
+                                            ?>
+                                            @if($time == 1)
+                                                <td bgcolor="#FFFF00" align="center"><font color="black">จันทร์</font></td>
+                                            @elseif($time == 2)
+                                                <td bgcolor="#FF0066" align="center"><font color="black">อังคาร</font></td>
+                                            @elseif($time == 3)
+                                                <td bgcolor="#32CD32"align="center"><font color="black">พุธ</font></td>
+                                            @elseif($time == 4)
+                                                <td bgcolor="#FF8C00" align="center"><font color="black">พฤหัสบดี</font></td>
+                                            @elseif($time == 5)
+                                                <td bgcolor="1E90FF" align="center"><font color="black">ศุกร์</font></td>
+                                            @elseif($time == 6)
+                                                <td bgcolor="#990099" align="center"><font color="black">เสาร์</font></td>
+                                            @else
+                                                <td bgcolor="#FF0000" align="center"><font color="black">อาทิตย์</font></td>
+                                            @endif
+                                        @else
+                                            <td >ไม่ระบุวันส่งงาน</td>
+                                        @endif
+                                        @if($data->DeliverType == 'ด่วน' || $data->DeliverType == 'ด่วนรับปาก')
+                                            <td bgcolor="#FF0000" align="center"><font color="white">{{ $data->DeliverType }}</font></td>
+                                        @else
+                                            <td align="center">{{ $data->DeliverType }}</td>
+                                        @endif
+                                        <td align="center">{{ $data->company_name }}</td>
+                                        <td align="center">{{ $data->Zonename }}</td>
+                                        <td align="center">{{ $data->name_area }}</td>
+                                        <td align="center"><a href="{{ url('/summary_report/'.$data->ID) }}">{{ $data->Barcode }}</a></td>
+                                        <td >{{ $data->doctor }}</td>
+                                        <td >{{ $data->customer}}</td>
+                                        <td >{{ $data->PatientName }}</td>
+                                        <td align="center">{{ $data->StartDate }}</td>
+                                        <td align="center">{{ $data->DeliverDate }}</td>
+                                        @if(!empty($data->production_cycle))
+                                            <td align="center">{{$data->production_cycle }}</td>
+                                        @else
+                                            <td align="center">-</td>
+                                        @endif
+                                        @if(!empty($data->type_of_product))
+                                            <td >{{$data->type_of_product }}</td>
+                                        @else
+                                            <td align="center">-</td>
+                                        @endif
+                                        <td align="center">
+                                            @if ($data->RefBarcode != null)
+                                                <font color="red">งานแก้</font>
+                                            @elseif ($data->ContiBarcode != null)
+                                                <font color="blue">งานต่อเนื่อง</font>
+                                            @else
+                                                งานใหม่
+                                            @endif
+
+                                        </td>
+                                        <td >
+                                            @if ($data->department == null || $data->department == '')
+                                                <label class="badge badge-outline-danger badge-pill">รอ Screen</label>
+                                            @else
+                                                @if(($data->sub_department_name != '' || $data->sub_department_name != NULL) && ($data->DepartmentID == $data->job_current_department))
+                                                <label class="badge badge-outline-primary badge-pill">{{ $data->department }}  - {{ $data->sub_department_name }}</label>
+                                                @else
+                                                <label class="badge badge-outline-primary badge-pill">{{ $data->department }}</label>
+                                                @endif
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @endforeach
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div> --}}
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{{-- @foreach ($order_sale as $data)
+    {{ Form::open(['method' => 'post' , 'url' => 'job_work_follower/'.$data->ID_job.'/update'])}}
+            @csrf
+    <div class="modal fade" id="jobcomplete{{$data->ID_job}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg " role="document" style="width:620px;">
+            <div class="modal-content">
+                <div class="card-header align-items-center">
+                    <label class="font-weight-bold">
+                        ยืนยัน รับงานบรรจุเสร็จเเล้ว
+                    </label>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div class="col-12 text-left">
+                        <div class="form-group row">
+                            <label class="col-form-label col-sm-2" for="barcode">Barcode*</label>
+                            <div class="col-sm-6">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="mdi mdi-barcode-scan"></i></span>
+                                    </div>
+                                        {{ Form::text('Barcode',$data->Barcode, ['class' => 'form-control','placeholder' => 'ไม่มี','readonly']) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-8">
+                        </div>
+                        <div class="col-3">
+                                <br>
+                           <button class="btn btn-success"  type="submit"  >ยืนยันการรับงาน</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{ Form::close() }}
+@endforeach --}}
+
+
+@stop
+{{-- @section('scripts')
+
+<script>
+        $(document).ready(function() {
+            var count = 1;
+              $('#table').DataTable({
+              processing: true,
+              serverSide: true,
+            //   ajax: '{{ url('/setting') }}',
+              ajax: '{{ url('/table/work_follower') }}',
+              columns: [
+                       {  },
+                       { data: 'ID', name: 'ID' },
+                    //    { data: 'id', name: 'delete' ,test:'id'},
+                    ],
+                    columnDefs: [
+                    {
+                        "targets": 0,  render: function(data, type, row) {
+                            return count++;
+                        }
+                    },
+                    {
+                        "targets": 1
+                    },
+                    // {
+                    //     "targets": 2,
+                    //     render: function(data, type, row){
+                    //         return '<button class="btn btn-danger" onclick="delete_dep('+data+')" style="padding:10px;">Delete</button>'
+                    //     }
+                    // },
+                    ],
+                    // "order": []
+           });
+        });
+</script>
+@stop --}}
+
+
+
+@section('scripts')
+<script>
+    $(function() {
+        var count = 1;
+          $('#table').DataTable({
+          processing: true,
+          serverSide: true,
+          ajax: '{{ url('/table/work_follower') }}',
+          columns: [
+                   { },
+                   { data: 'DeliverDate', name: 'DeliverDate' },
+                //    { data: 'username', name: 'username' },
+                //    { data: 'Name', name: 'Name' },
+                //    { data: 'Nick_name', name: 'Nick_name' },
+                //    { data: 'cotton', name: 'cotton' },
+                //    { data: 'type_Branch', name: 'type_Branch' },
+                //    { data: 'company', name: 'company' },
+                //    { data: 'status', name: 'status' },
+                //    { data: 'ID', name: 'ID' ,orderable: false, searchable: false}
+                ],
+                columnDefs: [
+                {
+                    "targets": 0,   render: function(data, type, row) {
+                        return count++;
+                    }
+                },
+                {
+                    "targets": 1,   render: function(data, type, row) {
+                        // var day = new date('05/07/2019');
+                        const dateformat = require('da05/07/2019teformat');
+                        let now = new Date();
+                        return dateformat(now, 'dddd, mmmm dS, yyyy, h:MM:ss TT');
+
+                        // "<?php $time = Carbon\Carbon::createFromFormat('d/m/Y', '05/07/2019')->dayOfWeek;?> {{ $time }}"
+                    }
+                },
+
+
+//                     @if(!empty($data->DeliverDate))
+
+// <?php $time = Carbon\Carbon::createFromFormat('d/m/Y', $data->DeliverDate)->dayOfWeek;
+// ?>
+// @if($time == 1)
+//     <td bgcolor="#FFFF00" align="center"><font color="black">จันทร์</font></td>
+// @elseif($time == 2)
+//     <td bgcolor="#FF0066" align="center"><font color="black">อังคาร</font></td>
+// @elseif($time == 3)
+//     <td bgcolor="#32CD32"align="center"><font color="black">พุธ</font></td>
+// @elseif($time == 4)
+//     <td bgcolor="#FF8C00" align="center"><font color="black">พฤหัสบดี</font></td>
+// @elseif($time == 5)
+//     <td bgcolor="1E90FF" align="center"><font color="black">ศุกร์</font></td>
+// @elseif($time == 6)
+//     <td bgcolor="#990099" align="center"><font color="black">เสาร์</font></td>
+// @else
+//     <td bgcolor="#FF0000" align="center"><font color="black">อาทิตย์</font></td>
+// @endif
+// @else
+// <td align="center">ไม่ระบุวันส่งงาน</td>
+// @endif
+                // {
+                //     "targets": 2
+                // },
+                // {
+                //     "targets": 3
+                // },
+                // {
+                //     "targets": 4
+                // },
+                // {
+                //     "targets": 5
+                // },
+                // {
+                //     "targets": 6
+                // },
+                // {
+                //     "targets": 7,
+                //     render: function(data, type, row) {
+                //         if (data == 1) {
+                //             return '<div class="badge badge-success">Active</div>'
+                //         }
+                //         else{
+                //             return '<div class="badge badge-danger">Inactive</div>'
+                //         }
+                //     }
+
+                // },
+                // {
+                //     "targets": 8,
+                //     "className": "text-center",
+                //     render: function(data, type, row) {
+                //         return '<a href="{{ url("employee/edit/")."/" }}'+row["ID_user"]+'"><button class="btn btn-warning" style="padding:5px;">&nbsp;&nbsp;&nbsp;Edit&nbsp;&nbsp;&nbsp;</button></a>  <button class="btn btn-danger" data-toggle="modal" data-target="#DELETE'+data+'" style="padding:5px;">Delete</button>\
+                //         <a href="{{ url("employee/update_status/")."/" }}'+data+'">\
+                //         <button class="btn btn-success" data-toggle="modal" style="padding-bottom: 2px;">change<br>status</button></a>'
+                //         }
+                // }
+                ],
+                "order": []
+       });
+    });
+</script>
+@stop

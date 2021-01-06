@@ -1,0 +1,91 @@
+                <div class="accordion basic-accordion" role="tablist">
+                    <div class="card">
+                        <div class="card-header" role="tab" id="orderRequestTypeID">
+                            <h6 class="mb-0">
+                            <a data-toggle="collapse" href="#collapseOne{{ $out_data_all->ID }}" aria-expanded="true" aria-controls="collapseOne">
+                                    <i class="card-icon mdi mdi-checkbox-marked-circle-outline"></i>
+                                    ข้อมูล Screen
+                                </a>
+                            </h6>
+                        </div>
+
+                        <div id="collapseOne{{ $out_data_all->ID }}" class="collapse show" role="tabpanel" aria-labelledby="orderRequestTypeID">
+                            <div class="card-body text-left">
+                                <form class="forms-sample">
+                                    {{-- @foreach($data_all as $out_data_all) --}}
+                                        <div class="card-body">
+                                            <div class="col-md-15">
+
+                                                <div class="form-group row">
+                                                    <label class="col-form-label col-sm-4" for="barcode"><b>Metal Type :</b> {{ $out_data_all->Metal_type }}</label>
+                                                    <label class="col-form-label col-sm-1" for="pickup"><b>Shade : </b></label>
+                                                        @if ($out_data_all->one_color != null)
+                                                        <label class="col-form-label col-sm-3" for="pickup">
+                                                            สีเดียว {{ $out_data_all->one_color }} - {{ $out_data_all->one_color_Combobox }}
+                                                        </label>
+                                                        @endif
+                                                        @if ($out_data_all->many_branch_crowns != null)
+                                                        <label class="col-form-label col-sm-6" for="pickup">
+                                                            <b>คอฟัน </b>ยี่ห้อ {{ $out_data_all->many_branch_crowns }} สี {{ $out_data_all->many_color_crowns }} <br>
+                                                            <b>กลางฟัน </b>ยี่ห้อ {{ $out_data_all->many_branch_Middle }} สี {{ $out_data_all->many_color_Middle }}   <br>
+                                                            <b>ปลานฟัน </b>ยี่ห้อ {{ $out_data_all->many_branch_tip }} สี {{ $out_data_all->many_color_tip }}   <br>
+                                                        </label>
+                                                        @endif
+
+                                                </div>
+
+                                                <div class="form-group row">
+                                                    <label class="col-form-label col-sm-4" for="barcode"><b>รับตะขอ : </b>{{ $out_data_all->Hook }}</label>
+
+                                                    <label class="col-form-label col-sm-1" for="barcode"><b>hook type : </b></label>
+
+                                                    <label class="col-form-label col-sm-3" for="barcode">
+                                                        <?php $count = 0 ?>
+                                                        @if( $out_data_all->MESIAL_REST  != null) @if($count != 0) , @endif {{ $out_data_all->MESIAL_REST }} <?php $count++ ?> @endif
+                                                        @if( $out_data_all->DISTAL_REST  != null) @if($count != 0) , @endif {{ $out_data_all->DISTAL_REST }} <?php $count++ ?>@endif
+                                                        @if( $out_data_all->CINGULUM_REST  != null)  @if($count != 0) , @endif {{ $out_data_all->CINGULUM_REST }} <?php $count++ ?>@endif
+                                                        @if( $out_data_all->EMBRESSURE_REST  != null)  @if($count != 0) , @endif {{ $out_data_all->EMBRESSURE_REST }} <?php $count++ ?>@endif
+                                                        @if( $out_data_all->LINGUAL_LEDGE  != null)  @if($count != 0) , @endif {{ $out_data_all->LINGUAL_LEDGE }} <?php $count++ ?>@endif
+                                                        @if( $out_data_all->other_hook  != null)  @if($count != 0) , @endif {{ $out_data_all->other_hook }} @endif <?php $count++ ?></label>
+                                                    <label class="col-form-label col-sm-4" for="barcode"><b>UNDERCUT : </b>
+                                                        @if ($out_data_all->undercut_hook == 'defaultunit')
+                                                            -
+                                                            @else
+                                                            {{ $out_data_all->undercut_hook }}
+                                                        @endif
+
+                                                        @if ($out_data_all->unit_hook == 'defaultunit')
+                                                            -
+                                                            @else
+                                                            {{ $out_data_all->unit_hook }}
+                                                        @endif
+                                                    </label>
+                                                </div>
+
+                                                <div class="form-group row">
+                                                    <label class="col-form-label col-sm-4" for="pickup"><b>Contour and occlusion design : </b>{{ $out_data_all->UNDERCUT }} - {{ $out_data_all->CONTOUR }}
+                                                        @if ($out_data_all->unit_CONTOUR != 0)
+                                                            - {{ $out_data_all->unit_CONTOUR }}
+                                                        @endif
+                                                    </label>
+                                                    <label class="col-form-label col-sm-4" for="pickup"><b>Occulusal Staining : </b> {{ $out_data_all->OCCLUSAL_STAINING }}</label>
+                                                </div>
+
+
+
+                                                <div class="form-group row">
+                                                    <label class="col-form-label col-sm-2" for="pickup">Margin and mental design type </label>
+                                                    <div class="col-sm-4">
+                                                        <div class="input-group">
+                                                            {{ Form::text('MARGIN',$out_data_all->MARGIN1, ['class' => 'form-control','placeholder' => 'Margin and mental design type','readonly']) }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {{-- @endforeach --}}
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
